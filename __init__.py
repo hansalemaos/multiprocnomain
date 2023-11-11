@@ -33,7 +33,8 @@ def multifu(k, di1):
     di1[rindex] = (fu)(**k)
 
 
-def start_multiprocessing(fu, it, processes=3, chunks=1):
+def start_multiprocessing(fu, it, processes=3, chunks=1,        print_stdout=False,
+        print_stderr=True,):
     r"""
     Execute a given function in parallel using multiprocessing.
 
@@ -135,14 +136,17 @@ def start_multiprocessing(fu, it, processes=3, chunks=1):
         capture_output=True,
         input=b"STARTDATASTARTDATASTARTDATA" + v + b"ENDDATAENDDATAENDDATAENDDATA"
     )
-    for ste in p.stderr.decode("utf-8", "backslashreplace"):
-        sys.stderr.write(ste)
-        sys.stderr.flush()
+    if print_stderr:
+        for ste in p.stderr.decode("utf-8", "backslashreplace"):
+            sys.stderr.write(ste)
+            sys.stderr.flush()
     d = dill.loads(
         p.stdout.split(b"ENDEND1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXX1ENDEND")[1].split(
             b"DNE1YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYDNE1"
         )[0]
     )
+    if print_stdout:
+        print(d)
     return d
 
 
